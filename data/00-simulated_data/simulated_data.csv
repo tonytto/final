@@ -1,4 +1,4 @@
-country,suicide_rate,gdp_per_capita,unemploy_rate,child_exclude_rate,alocohol_consumption
+country,suicide_rate,gdp_per_capita,unemploy_rate,youth_neet_rate,alocohol_consumption
 Country 1,10.4,12393.193062540044,8.645,13.529,3.7
 Country 2,10.4,15024.846877385042,10.4,13.569,4.78
 Country 3,8.9,7307.124170176532,11.233,16.608,6.2
