@@ -20,7 +20,7 @@ The repo is structured as:
 ## Download Data
 
 
-The data used in this study was obtained from the World Bank's (DataBank)[https://databank.worldbank.org/source/world-development-indicators#]. World Development Indicators dataset was sued and this dataset includes 1,496 variables, requiring selection and configuration to focus on the five variables used, as well as specific countries and the year. The steps for this setup are as follows:
+The data used in this study was obtained from the World Bank's [DataBank](https://databank.worldbank.org/source/world-development-indicators#). World Development Indicators dataset was sued and this dataset includes 1,496 variables, requiring selection and configuration to focus on the five variables used, as well as specific countries and the year. The steps for this setup are as follows:
 
 1. Access the DataBank via the provided link.
 2. In the Country section, change the default option from All to Countries, then click Select All.
