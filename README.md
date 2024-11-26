@@ -1,4 +1,4 @@
-# A Cross-National Analysis of Risk Factors and Prevention Strategies (2019)
+# Suicide Mortality Rates in 2019: A Cross-National Analysis of Risk Factors and Prevention Strategies
 
 ## Overview
 
