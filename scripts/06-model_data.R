@@ -11,15 +11,16 @@
 #### Workspace setup ####
 library(tidyverse)
 library(rstanarm)
+library(arrow)
 
 #### Read data ####
-analysis_data <- read_csv("data/analysis_data/analysis_data.csv")
+cleaned_data2 <- read_parquet("data/02-analysis_data/cleaned_suicide_data.parquet")
 
 ### Model data ####
 first_model <-
   stan_glm(
-    formula = flying_time ~ length + width,
-    data = analysis_data,
+    formula = suicide_rate ~ gdp_per_capita + unemploy_rate + youth_neet_rate + alcohol_consumption,
+    data = cleaned_data2,
     family = gaussian(),
     prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
     prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
@@ -27,6 +28,8 @@ first_model <-
     seed = 853
   )
 
+lm(suicide_rate ~ gdp_per_capita + unemploy_rate + youth_neet_rate + alcohol_consumption,
+   data = cleaned_data2)
 
 #### Save model ####
 saveRDS(
