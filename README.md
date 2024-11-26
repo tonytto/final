@@ -29,7 +29,7 @@ The data used in this study was obtained from the World Bank's (DataBank)[https:
   - GDP per capita (current US$)
   - Unemployment, total (% of total labor force) (modeled ILO estimate)
   - Share of youth not in education, employment, or training, total (% of youth population) (modeled ILO   estimate)
-  Total alcohol consumption per capita (liters of pure alcohol, projected estimates, 15+ years of age)
+  - Total alcohol consumption per capita (liters of pure alcohol, projected estimates, 15+ years of age)
 4. In the Time section, check the year 2019.
 5. Click Apply Changes in the center of the page.
 6. From the Download Options dropdown menu, select CSV to save the dataset.
