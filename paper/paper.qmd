@@ -1,13 +1,12 @@
 ---
-title: "My title"
+title: "Socioeconomic Determinants of Suicide: A Cross-National Analysis of Risk Factors and Prevention Strategies"
 subtitle: "My subtitle if needed"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: [https://github.com/RohanAlexander/starter_folder](https://github.com/RohanAlexander/starter_folder)."
+  - Taejun Um
+thanks: "Code and data are available at: [https://github.com/tonytto/suicide-mortality-analysis](https://github.com/tonytto/suicide-mortality-analysis)."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "Suicide is a significant issue that extends beyond individual suffering, profoundly impacting social cohesion and economic stability while being closely linked to structural factors such as social inequality, inadequate mental health services, and economic hardships. This paper analyzes the relationship between national suicide rates in 2019 and socioeconomic factors such as GDP per capita, unemployment rate, youth NEET rate, and alcohol consumption. The model analysis reveals that GDP per capita, unemployment rate, and alcohol consumption per capita have a positive relationship with suicide rates. Among these, when other variables are held constant, a 1-liter increase in adults' average pure alcohol consumption corresponds to an approximate increase of 0.65 suicides per 100,000 people. Based on the identified relationship between suicide rates and societal issues, this paper offers insights for nations to explore effective policy directions for reducing suicide rates."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -19,7 +18,10 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(knitr)
+library(arrow)
+
+data <- read_parquet(here::here("data/02-analysis_data/cleaned_suicide_data.parquet"))
 ```
 
 
@@ -65,18 +67,19 @@ Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 #| fig-cap: Bills of penguins
 #| echo: false
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+# ggplot(penguins, aes(x = island, fill = species)) +
+#   geom_bar(alpha = 0.8) +
+#   scale_fill_manual(values = c("darkorange","purple","cyan4"),
+#                     guide = "none") +
+#   theme_minimal() +
+#   facet_wrap(~species, ncol = 1) +
+#   coord_flip()
 ```
 
-Talk more about it.
+ Talk more about it.
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+ And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+
 
 ```{r}
 #| label: fig-planes
@@ -84,15 +87,15 @@ And also planes (@fig-planes). (You can change the height and width, but don't w
 #| echo: false
 #| warning: false
 #| message: false
-
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+# 
+# analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
+# 
+# analysis_data |> 
+#   ggplot(aes(x = width, y = length)) +
+#   geom_point(alpha = 0.8) +
+#   theme_minimal() +
+#   labs(x = "Wing width (mm)",
+#        y = "Wing length (mm)")
 ```
 
 Talk way more about it. 
@@ -162,13 +165,13 @@ first_model <-
 #| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
 #| warning: false
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+# modelsummary::modelsummary(
+#   list(
+#     "First model" = first_model
+#   ),
+#   statistic = "mad",
+#   fmt = 2
+# )
 ```
 
 
@@ -216,16 +219,16 @@ In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. Th
 #| layout-ncol: 2
 #| fig-cap: "Examining how the model fits, and is affected by, the data"
 #| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
+# 
+# pp_check(first_model) +
+#   theme_classic() +
+#   theme(legend.position = "bottom")
+# 
+# posterior_vs_prior(first_model) +
+#   theme_minimal() +
+#   scale_color_brewer(palette = "Set1") +
+#   theme(legend.position = "bottom") +
+#   coord_flip()
 ```
 
 ## Diagnostics
@@ -244,9 +247,9 @@ posterior_vs_prior(first_model) +
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
+# plot(first_model, "trace")
+# 
+# plot(first_model, "rhat")
 ```
 
 
