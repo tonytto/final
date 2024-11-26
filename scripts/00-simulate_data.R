@@ -3,7 +3,7 @@
 # unemployment rate, youth NEET rate, and alcohol consumption for 217 nations.
 # Author: Taejun Um
 # Date: 26 November 2024
-# Contact: taejun.um@utoronto.ca
+# Contact: taejun.um@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `tidyverse` package must be installed
 
