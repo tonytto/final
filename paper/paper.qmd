@@ -1,6 +1,5 @@
 ---
 title: "Socioeconomic Determinants of Suicide: A Cross-National Analysis of Risk Factors and Prevention Strategies"
-subtitle: "My subtitle if needed"
 author: 
   - Taejun Um
 thanks: "Code and data are available at: [https://github.com/tonytto/suicide-mortality-analysis](https://github.com/tonytto/suicide-mortality-analysis)."
@@ -25,95 +24,97 @@ data <- read_parquet(here::here("data/02-analysis_data/cleaned_suicide_data.parq
 ```
 
 
-# Introduction
+# Introduction {#sec-intro}
 
-Overview paragraph
-
-Estimand paragraph
-
-Results paragraph
-
-Why it matters paragraph
-
-Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
-
-
-
-
+Suicide is a significant public health issue worldwide, claiming millions of lives and having a profound impact on society and the economy beyond individual tragedies. Suicide is easily considered a personal problem, but its causes are deeply intertwined with social factors such as economic inequality, unemployment, lack of education and opportunity, and alcohol consumption. According to statistics [@owid-causes-of-death-treemap], as of 2019, there were 55 million deaths worldwide, of which 1.3% or 760,000 died by suicide. This is a daily average of about 2080. This is such a keen attention that governments and institutions around the world have come up with measures to prevent suicide. For example, Korea currently has 25.2 people dying by suicide per 100,000 OECD countries as of 2022, the highest number. [@korea-suicide-rate] As a result, Korea is renewing its suicide prevention measures every five years, including the operation of a "suicide prevention center". It aims to reduce the suicide rate by 30 percent by 2027.
+Using Bayesian Multi Linear Regression, this paper aims to analyze the relationship between suicide mortality per 100,000 people and significant social indicators such as GDP per capita, NEET, education and unemployment rate, and alcohol consumption per capita. These variables represent economic stability, social vulnerability, and behavioural health risk factors, providing a basis for analyzing suicide rate patterns from various angles. In addition, through this analysis, we would like to suggest policy directions for the suicide rate decline of each government. Since the GDP and unemployment rate sectors can't be easily controlled by national policy, these indicators will be used to examine national trends in suicide rate statistics.The data was extracted from the World Bank's Data Bank, and we want to predict the suicide rate by country.
+The results revealed that alcohol consumption had the most significant impact, followed by the unemployment rate. Surprisingly, the influence of the youth NEET rate and GDP per capita was minimal. Through this, we would like to use cross-country data to identify socioeconomic and behavioural factors that affect suicide rates and to present implications for establishing effective prevention strategies. Such research will contribute to creating an environment in which policymakers and stakeholders prioritize mental health and social welfare and to addressing suicide.
+The paper has since been divided into four main sections. Section @sec-data is an introduction to the data used in the analysis. It introduces how the data was obtained, its processing, and the variables used in the regression. Section @sec-model is about model analysis. Section @sec-result is the result. In this section, we will introduce the trend that we found. Section @sec-discuss is about what is interesting about the results found in Section 4. The main focus is on how these results are realistically affected.
 
 
 # Data {#sec-data}
 
 ## Overview
 
-We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
+We use the statistical programming language R [@citeR]. The dataset was downloaded from DataBank's World Development Indicator [@databank]. Its setup was completed through R [@citeR] with the help of tidyverse package [@citetidyverse], janitor package [@citejanitor], knitr package [@citeknitr], here package [@citehere], ggplot2 package [@citeggplot2], dplyr package [@citedplyr], tibble package [@citetibble], and readr package [@citereadr].
 
-Overview text
+An analysis and visualization tool that contains a collection of time series data on various topics used by the World Bank. Among the datasets available, this analysis utilized the World Development Indicators dataset. This dataset includes a wide range of social and economic data for countries worldwide, spanning from 1960 to 2023, with a total of 1,496 variables.
+
+For this paper, data from 2019 for 217 countries were selected, focusing on the variables GDP per capita, unemployment rate, youth NEET rate, and alcohol consumption. Unfortunately, due to missing data in some countries, these entries were excluded, leaving a total of 173 countries for analysis. The year 2019 was chosen as it represents the most recent year with minimal data missing.
+
+This dataset consolidates data from reputable sources, ensuring credibility. Each variable originates from different primary sources. Suicide rates and alcohol consumption were sourced from the WHO Global Health Observatory Data Repository [@WHOdata]. GDP per capita was extracted from the World Bank national accounts data. Unemployment rate and youth NEET rate were derived from the International Labour Organization's ILO Modelled Estimates and Projections database [@ilostat].
 
 ## Measurement
-	
-Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
 
-## Outcome variables
+The cleaned dataset used in this analysis contains five variables, all derived from reputable national surveys. Suicide rate measures the number of suicides per 100,000 people in a given country during the year 2019. By quantifying suicides per 100,000 people, this metric eliminates the influence of population size, ensuring comparability across countries. GDP per capita reflects the gross domestic product of a country divided by its population, providing an estimate of the average economic capacity of individuals. Due to its relatively large scale, this variable was divided by 100 for modeling purposes.
 
-Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
+Unemployment rate represents the percentage of the labor force that is unemployed, calculated using the labor force as the denominator. Youth NEET rate indicates the proportion of young individuals who are not engaged in education, employment, or training, highlighting social and economic disengagement among the youth. Total alcohol consumption per capita measures the average annual alcohol consumption of individuals aged 15 and older, expressed in liters of pure alcohol, offering insight into behavioral health risks.
 
+The unemployment rate and youth NEET rate are modeled estimates provided by the International Labour Organization (ILO). These estimates address missing data using mathematical modeling techniques. Although these values may not be as precise as direct survey data, they were included in this study to maximize the number of countries analyzed.
 
+When the dataset was initially obtained, each variable was recorded in separate rows, resulting in five rows of data per country. Through a data cleaning process, the dataset was reorganized so that each country occupied a single row, with variables arranged as separate columns to facilitate analysis.
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+## Variables
 
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+The primary outcome variable in this paper is the national suicide mortality rate, which represents the number of people who died by suicide per 100,000 individuals. This metric allows for comparisons across countries without being influenced by differences in total population size.
 
-# ggplot(penguins, aes(x = island, fill = species)) +
-#   geom_bar(alpha = 0.8) +
-#   scale_fill_manual(values = c("darkorange","purple","cyan4"),
-#                     guide = "none") +
-#   theme_minimal() +
-#   facet_wrap(~species, ncol = 1) +
-#   coord_flip()
-```
+According to the summary statistics for the suicide mortality rate variable, the mean is approximately 9.4, the median is 7.5, and the standard deviation is 7.869. The country with the highest suicide mortality rate is Lesotho, with approximately 72.4 suicides per 100,000 people—7.7 times higher than the global average and nearly double that of the country with the second-highest rate. Conversely, the country with the lowest rate is Barbados, with only 0.6 suicides per 100,000 people.
 
- Talk more about it.
-
- And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
+The predictor variables used in this analysis include GDP per capita, unemployment rate, youth NEET rate, and average alcohol consumption.
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
+#| label: tbl-suicide-rate
+#| tbl-cap: Top 10 countries with highest and lowest suicide mortality rate.
 #| warning: false
 #| message: false
-# 
-# analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-# 
-# analysis_data |> 
-#   ggplot(aes(x = width, y = length)) +
-#   geom_point(alpha = 0.8) +
-#   theme_minimal() +
-#   labs(x = "Wing width (mm)",
-#        y = "Wing length (mm)")
+#| echo: false
+#| layout-ncol: 2
+
+data |>
+  select(country, suicide_rate) |>
+  arrange(desc(suicide_rate)) |>
+  slice(1:10) |>
+  kable(
+    digits = 4,
+    booktabs = TRUE,
+    linesep = ""
+  )
+
+data |>
+  select(country, suicide_rate) |>
+  arrange(suicide_rate) |>
+  slice(1:10) |>
+  kable(
+    digits = 4,
+    booktabs = TRUE,
+    linesep = ""
+  )
 ```
 
-Talk way more about it. 
+```{r}
+#| label: tbl-suicide-summary
+#| tbl-cap: Summary of suicide rate
+#| warning: false
+#| message: false
+#| echo: false
 
-## Predictor variables
+data |>
+  summarize(
+    mean = mean(suicide_rate),
+    median = median(suicide_rate),
+    min = min(suicide_rate),
+    max = max(suicide_rate),
+    sd = sd(suicide_rate)
+  ) |>
+  kable(
+    digits = 4,
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
 
-Add graphs, tables and text.
 
-Use sub-sub-headings for each outcome variable and feel free to combine a few into one if they go together naturally.
-
-
-
-
-
-
-
-
-# Model
+# Model {#sec-model}
 
 The goal of our modelling strategy is twofold. Firstly,...
 
@@ -121,28 +122,27 @@ Here we briefly describe the Bayesian analysis model used to investigate... Back
 
 ## Model set-up
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
 \begin{align} 
 y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
+\mu_i &= \beta_0 + \beta_1 gdp_{i} + \beta_2 unemployment_{i} + \beta_3 NEET_{i} + \beta_4 alcohol_{i} \\
+\label{eq:model_f}
+\beta_0 &\sim \mbox{Normal}(0, 2.5) \\
+\beta_1 &\sim \mbox{Normal}(0, 2.5) \\
+\beta_2 &\sim \mbox{Normal}(0, 2.5) \\
+\beta_3 &\sim \mbox{Normal}(0, 2.5) \\
+\beta_4 &\sim \mbox{Normal}(0, 2.5) \\
 \sigma &\sim \mbox{Exponential}(1)
 \end{align}
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
+In above \ref{eq:model_f}, we use GDP per capita, unemployment rate, youth NEET rate, and average alcohol consumption. We ran the model in R [@citeR] using the `rstanarm` package of @rstanarm.
 
 
 ### Model justification
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
+We expect a positive relationship between unemployment rate, youth NEET rate, and average alcohol consumption. However, we expect a negative relationship between GDP per capita.
 
 
-# Results
+# Results {#sec-result}
 
 Our results are summarized in @tbl-modelresults.
 
@@ -162,100 +162,39 @@ first_model <-
 #| echo: false
 #| eval: true
 #| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#| tbl-cap: "Bayesian multi linear regression model of suicide mortality rate"
 #| warning: false
 
-# modelsummary::modelsummary(
-#   list(
-#     "First model" = first_model
-#   ),
-#   statistic = "mad",
-#   fmt = 2
-# )
+modelsummary::modelsummary(
+  list(
+    "First model" = first_model
+  ),
+  statistic = "mad",
+  fmt = 2
+)
 ```
 
+By looking at the coefficient, the results revealed that alcohol consumption had the most significant impact, followed by the unemployment rate. The influence of the youth NEET rate and GDP per capita was minimal. 
 
+# Discussion {#sec-discuss}
 
+## 1. Addressing Behavioral Health Risks: Alcohol Consumption as a Key Factor  {#sec-first-point}
 
-# Discussion
+This analysis highlights that alcohol consumption is the most critical factor influencing suicide rates among the variables studied. This result highlights the importance of policies to reduce excessive alcohol consumption. Governments should consider strengthening regulations on alcohol sales, raising taxes on alcohol, and launching public awareness campaigns to educate the public about the risks of alcohol misuse. In addition, encouraging healthier lifestyles and providing support programs for individuals struggling with alcohol dependence can mitigate their impact on mental health and reduce suicide rates. Addressing these key behavioural risk factors can be a cornerstone of effective suicide prevention strategies.
 
-## First discussion point {#sec-first-point}
+## 2. Employment and Economic Stability: Unemployment as a Secondary Driver {#sec-sec-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+The unemployment rate also has a significant impact on suicide rates, underscoring the importance of economic stability. Policymakers should prioritize job creation, especially during recessions, and provide substantial unemployment benefits to reduce the financial stress of the unemployed. Targeted employment programs such as job training and re-skilling initiatives can help reintegrate the unemployed into the workforce, thus reducing their vulnerability to mental health problems. Although per capita GDP was found to have no significant impact in this analysis, widespread economic stability suggests that efforts to strengthen financial resilience by indirectly supporting mental health are still relevant.
 
-## Second discussion point
+## 3. Role of Youth NEET and Broader Policy Implications {#sec-third-point}
 
-Please don't use these as sub-heading labels - change them to be what your point actually is.
-
-## Third discussion point
+Interestingly, in this analysis, the youth NEET rate and per capita GDP had little direct impact on suicide rates. The findings suggest that other factors, such as social support systems and mental health infrastructure, may mediate the relationship between adolescent secession and suicide. Although the youth NEET rate may not directly impact, addressing the youth disconnection issue is essential for building social cohesion and long-term economic growth. Governments should continue to invest in education, career training, youth programs for wider social benefits, and suicide prevention.
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+This study has several limitations to consider when interpreting research results. First, data quality and completeness raised the issue of some variables, especially missing data on unemployment and youth NEET  ratio, being filled using modelled estimates, which could lead to bias. Since we used 2019 as a single analysis year, our ability to observe trends over time is also limited. Second, multiple linear regression models assume linear relationships and do not take into account complex interactions or unmeasured factors such as cultural norms or access to prevention programs, which can have a significant impact on the rate of suicide. Third, the findings may lack generalizability due to various socioeconomic and cultural contexts by country and the lack of analysis within the country, such as urban-rural divisions. Furthermore, this study does not address unquantitative factors, such as stigma, family dynamics, or psychological disorders, which are essential for understanding suicide.
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-# 
-# pp_check(first_model) +
-#   theme_classic() +
-#   theme(legend.position = "bottom")
-# 
-# posterior_vs_prior(first_model) +
-#   theme_minimal() +
-#   scale_color_brewer(palette = "Set1") +
-#   theme(legend.position = "bottom") +
-#   coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-# plot(first_model, "trace")
-# 
-# plot(first_model, "rhat")
-```
-
-
-
-\newpage
-
 
 # References
 
